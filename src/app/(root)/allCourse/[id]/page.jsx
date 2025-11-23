@@ -10,7 +10,7 @@ const Page = () => {
   const [error, setError] = useState(null); // optional error state
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/courses/${id}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/courses/${id}`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch course data");
         return res.json();

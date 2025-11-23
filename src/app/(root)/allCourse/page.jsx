@@ -1,9 +1,18 @@
 import CourseCard from "@/app/components/shared/Course/CourseCard";
 import React from "react";
 
+export const dynamic = "force-dynamic";
+
 const AllCourse = async () => {
-  const res = await fetch("http://localhost:5000/api/courses");
-  const courses = await res.json();
+  let courses = [];
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/courses`, {
+      cache: "no-store",
+    });
+    courses = await res.json();
+  } catch (err) {
+    console.error("Failed to fetch courses:", err);
+  }
 
   return (
     <div className="max-w-[1500px] mx-5 md:mx-6 2xl:mx-auto py-12 mt-16 md:mt-18">

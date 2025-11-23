@@ -2,7 +2,7 @@ import React from "react";
 import CourseCard from "../../shared/Course/CourseCard";
 
 const LatestCourse = async () => {
-  const res = await fetch("http://localhost:5000/api/latest");
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/latest`);
   const courses = await res.json();
 
   return (
