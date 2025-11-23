@@ -24,3 +24,25 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+.gradient-bg {
+  background: linear-gradient(to bottom, #9333ea, #3b82f6);
+}
+.gradient-btn {
+  padding: 8px 16px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-weight: 500;
+  background: linear-gradient(
+    to right,
+    #3b82f6,
+    #9333ea
+  ); /* blue-500 → purple-600 */
+  transition: 0.3s ease;
+}
+
+.gradient-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
