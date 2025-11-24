@@ -1,11 +1,9 @@
 "use client";
 
-const page = () => {
-  const user = {
-    email: "mdriyazakondo@gmail.com",
-    name: "Md Riyaz Akondo",
-  };
+import { useUser } from "@clerk/nextjs";
 
+const AddCourse = () => {
+  const { user } = useUser();
   const handleSubmit = async (e) => {
     e.preventDefault();
     const name = e.target.name.value;
@@ -60,14 +58,14 @@ const page = () => {
       >
         <input
           type="text"
-          defaultValue={user.name}
+          defaultValue={user?.fullName}
           name="name"
           placeholder="Owner Name"
           className="w-full p-3 border rounded outline-none focus:border-purple-500 border-gray-400"
         />
         <input
           type="text"
-          defaultValue={user?.email}
+          defaultValue={user?.primaryEmailAddress?.emailAddress}
           name="email"
           placeholder="Owner Email"
           className="w-full p-3 border rounded outline-none focus:border-purple-500 border-gray-400"
@@ -131,4 +129,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default AddCourse;

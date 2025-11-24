@@ -6,8 +6,8 @@ import React, { useEffect, useState } from "react";
 
 const Page = () => {
   const { id } = useParams();
-  const [singleData, setSingleData] = useState(null); // initial state null
-  const [error, setError] = useState(null); // optional error state
+  const [singleData, setSingleData] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/courses/${id}`)

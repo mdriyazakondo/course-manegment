@@ -84,4 +84,22 @@ app.delete("/api/courses/:id", async (req, res) => {
   res.send(result);
 });
 
+app.get("/api/myPost", async (req, res) => {
+  try {
+    const email = req.query.email;
+
+    if (!email) {
+      return res.status(400).send({ error: "Email is required" });
+    }
+
+    // MongoDB query: oi email diye course gula find koro
+    const courses = await courseCollection.find({ email }).toArray();
+
+    res.status(200).send(courses);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: "Server error" });
+  }
+});
+
 app.listen(5000, () => console.log("Backend running on port 5000"));

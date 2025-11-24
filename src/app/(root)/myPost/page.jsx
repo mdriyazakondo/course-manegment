@@ -1,91 +1,148 @@
+"use client";
+
+import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash, FaTimes } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import UpdateCourse from "@/app/components/UpdateCourse/UpdateCourse";
 
 const MyPost = () => {
+  const { user } = useUser();
+  const [data, setData] = useState([]);
+
+  // Modal states
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editItem, setEditItem] = useState(null);
+
+  useEffect(() => {
+    if (user) {
+      fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/myPost?email=${user.primaryEmailAddress.emailAddress}`
+      )
+        .then((res) => res.json())
+        .then((data) => setData(data));
+    }
+  }, [user]);
+
+  // Delete post
+  const handleDelete = (id) => {
+    if (!window.confirm("Are you sure you want to delete this post?")) return;
+
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/courses/${id}`, {
+      method: "DELETE",
+    }).then((res) => {
+      if (res.ok) {
+        setData((prevData) => prevData.filter((course) => course._id !== id));
+        alert("Post deleted successfully!");
+      }
+    });
+  };
+
+  // Open modal to edit
+  const handleEdit = (item) => {
+    setEditItem(item);
+    setIsModalOpen(true);
+  };
+
   return (
-    <div className="mt-20">
-      <div className="py-10 px-3 sm:px-6 lg:px-10 relative min-h-[56vh]">
-        {/* Title */}
-        <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-4 sm:mb-6 text-center text-blue-500">
-          My All Post
-        </h2>
+    <div className="mt-24 max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-10 mb-6 min-h-[56vh]">
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-8 text-center text-blue-600">
+        My All Posts
+      </h2>
 
-        {/* Table */}
-        <div className="overflow-x-auto w-full">
-          <table className="min-w-full border border-gray-200 text-sm sm:text-base">
-            <thead className="gradient-bg text-white">
+      <div className="overflow-x-auto w-full shadow-md rounded-lg">
+        <table className="min-w-full text-sm md:text-base border border-gray-200">
+          <thead className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
+            <tr>
+              <th className="px-4 py-3 text-center">Image</th>
+              <th className="px-4 py-3 text-center">Course Title</th>
+              <th className="px-4 py-3 text-center">Instructor</th>
+              <th className="px-4 py-3 text-center">Category</th>
+              <th className="px-4 py-3 text-center">Price</th>
+              <th className="px-4 py-3 text-center">Publish Date</th>
+              <th className="px-4 py-3 text-center">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody className="bg-white text-gray-800">
+            {data.length === 0 ? (
               <tr>
-                <th className="px-4 py-3 text-center">Crop Image</th>
-                <th className="px-4 py-3 text-center">Crop Name</th>
-                <th className="px-4 py-3 text-center">Owner Name</th>
-                <th className="px-4 py-3 text-center">Location</th>
-                <th className="px-4 py-3 text-center">Type</th>
-                <th className="px-4 py-3 text-center">Price</th>
-                <th className="px-4 py-3 text-center">Quantity</th>
-                <th className="px-4 py-3 text-center">Date</th>
-                <th className="px-4 py-3 text-center">Actions</th>
-              </tr>
-            </thead>
-
-            <tbody className="text-gray-800">
-              <tr className="border-b border-gray-200 hover:bg-gray-50">
-                <td className="px-4 py-2 border-r border-gray-300 text-center">
-                  <Image
-                    className="rounded-full w-10 h-10 object-cover"
-                    src="https://www.oxfordwebstudio.com/user/pages/06.da-li-znate/sta-je-html/sta-je-html.jpg"
-                    width={100}
-                    height={100}
-                    alt="Crop"
-                  />
-                </td>
-
-                <td className="px-4 py-2 border-r border-gray-300 text-center">
-                  HTML
-                </td>
-
-                <td className="px-4 py-2 border-r border-gray-300 text-center">
-                  Md Amdad Islam
-                </td>
-
-                <td className="px-4 py-2 border-r border-gray-300 text-center">
-                  Dhaka
-                </td>
-
-                <td className="px-4 py-2 border-r border-gray-300 text-center">
-                  Web Developer
-                </td>
-
-                <td className="px-4 py-2 border-r border-gray-300 text-center">
-                  $10000
-                </td>
-
-                <td className="px-4 py-2 border-r border-gray-300 text-center">
-                  5
-                </td>
-
-                <td className="px-4 py-2 border-r border-gray-300 text-center">
-                  {new Date().toLocaleDateString()}
-                </td>
-
-                <td className="px-4 py-2 border-r border-gray-300 text-center">
-                  <div className="flex justify-center gap-2">
-                    <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded flex items-center gap-1 cursor-pointer">
-                      <FaEdit /> Edit
-                    </button>
-
-                    <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded flex items-center gap-1 cursor-pointer">
-                      <FaTrash /> Delete
-                    </button>
-                  </div>
+                <td colSpan="7" className="text-center py-6">
+                  No posts found.
                 </td>
               </tr>
-            </tbody>
-          </table>
-        </div>
-
-        {/* Removed the modal completely since you said: 
-            "sob hard code a bosbe, kono dynamic thakbe na" */}
+            ) : (
+              data.map((item) => (
+                <tr
+                  key={item._id}
+                  className="border-b border-gray-200 hover:bg-gray-50 transition-colors"
+                >
+                  <td className="px-4 py-2 text-center">
+                    <Image
+                      className="rounded-full w-12 h-12 object-cover mx-auto"
+                      src={item.image}
+                      width={50}
+                      height={50}
+                      alt={item.title}
+                    />
+                  </td>
+                  <td className="px-4 py-2 text-center font-medium">
+                    {item.title}
+                  </td>
+                  <td className="px-4 py-2 text-center">{item.instructor}</td>
+                  <td className="px-4 py-2 text-center">{item.category}</td>
+                  <td className="px-4 py-2 text-center">${item.price}</td>
+                  <td className="px-4 py-2 text-center">
+                    {new Date(item.created_at).toLocaleDateString()}
+                  </td>
+                  <td className="px-4 py-2 text-center">
+                    <div className="flex justify-center gap-2">
+                      <button
+                        onClick={() => handleEdit(item)}
+                        className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded flex items-center gap-1"
+                      >
+                        <FaEdit /> Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(item._id)}
+                        className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded flex items-center gap-1"
+                      >
+                        <FaTrash /> Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
       </div>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-gray-100 bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-5xl mx-auto relative">
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 cursor-pointer"
+            >
+              <FaTimes />
+            </button>
+            <h2 className="text-xl font-bold mb-4">Edit Course</h2>
+            <UpdateCourse
+              course={editItem}
+              onCancel={() => setIsModalOpen(false)}
+              onSave={(updatedCourse) => {
+                setData((prev) =>
+                  prev.map((item) =>
+                    item._id === updatedCourse._id ? updatedCourse : item
+                  )
+                );
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
