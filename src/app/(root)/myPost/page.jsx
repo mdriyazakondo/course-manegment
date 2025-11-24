@@ -1,18 +1,19 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
+import { useClerk, useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import { FaEdit, FaTrash, FaTimes } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import UpdateCourse from "@/app/components/UpdateCourse/UpdateCourse";
+import ProtectRoute from "@/app/components/ProtectRoute/ProtectRoute";
 
 const MyPost = () => {
   const { user } = useUser();
-  const [data, setData] = useState([]);
-
+  const { openSignIn } = useClerk();
   // Modal states
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editItem, setEditItem] = useState(null);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     if (user) {
@@ -23,6 +24,11 @@ const MyPost = () => {
         .then((data) => setData(data));
     }
   }, [user]);
+
+  if (!user) {
+    openSignIn();
+    return <ProtectRoute />;
+  }
 
   // Delete post
   const handleDelete = (id) => {

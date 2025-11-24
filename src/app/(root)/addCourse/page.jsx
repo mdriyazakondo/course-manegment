@@ -1,9 +1,17 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
+import ProtectRoute from "@/app/components/ProtectRoute/ProtectRoute";
+import { useClerk, useUser } from "@clerk/nextjs";
 
 const AddCourse = () => {
   const { user } = useUser();
+
+  const { openSignIn } = useClerk();
+
+  if (!user) {
+    openSignIn();
+    return <ProtectRoute />;
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
     const name = e.target.name.value;
@@ -60,6 +68,7 @@ const AddCourse = () => {
           type="text"
           defaultValue={user?.fullName}
           name="name"
+          required
           placeholder="Owner Name"
           className="w-full p-3 border rounded outline-none focus:border-purple-500 border-gray-400"
         />
@@ -67,6 +76,7 @@ const AddCourse = () => {
           type="text"
           defaultValue={user?.primaryEmailAddress?.emailAddress}
           name="email"
+          required
           placeholder="Owner Email"
           className="w-full p-3 border rounded outline-none focus:border-purple-500 border-gray-400"
         />
@@ -74,46 +84,54 @@ const AddCourse = () => {
           type="text"
           name="title"
           placeholder="Course Title"
+          required
           className="w-full p-3 border rounded outline-none focus:border-purple-500 border-gray-400"
         />
         <input
           type="text"
           name="category"
           placeholder="Category"
+          required
           className="w-full p-3 border rounded outline-none focus:border-purple-500 border-gray-400"
         />
         <input
           type="text"
           name="instructor"
           placeholder="Instructor"
+          required
           className="w-full p-3 border rounded outline-none focus:border-purple-500 border-gray-400"
         />
         <input
           type="text"
           name="duration"
           placeholder="Duration (e.g., 6 weeks)"
+          required
           className="w-full p-3 border rounded outline-none focus:border-purple-500 border-gray-400"
         />
         <input
           type="text"
           name="level"
           placeholder="Level (Beginner, Intermediate, Advanced)"
+          required
           className="w-full p-3 border rounded outline-none focus:border-purple-500 border-gray-400"
         />
         <input
           type="number"
           name="price"
           placeholder="Price"
+          required
           className="w-full p-3 border rounded outline-none focus:border-purple-500 border-gray-400"
         />
         <input
           type="text"
           name="image"
           placeholder="Image URL"
+          required
           className="w-full p-3 border rounded outline-none focus:border-purple-500 border-gray-400"
         />
         <textarea
           name="description"
+          required
           placeholder="Course Description"
           className="w-full p-3 border rounded outline-none focus:border-purple-500 border-gray-400 resize-none"
           rows={3}

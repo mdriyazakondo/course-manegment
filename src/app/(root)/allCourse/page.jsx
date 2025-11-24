@@ -1,5 +1,4 @@
 import CourseCard from "@/app/components/shared/Course/CourseCard";
-import React from "react";
 
 export const dynamic = "force-dynamic";
 
