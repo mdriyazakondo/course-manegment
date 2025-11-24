@@ -58,7 +58,7 @@ const MyPost = () => {
 
       <div className="overflow-x-auto w-full shadow-md rounded-lg">
         <table className="min-w-full text-sm md:text-base border border-gray-200">
-          <thead className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
+          <thead className="bg-linear-to-r from-blue-500 to-indigo-600 text-white">
             <tr>
               <th className="px-4 py-3 text-center">Image</th>
               <th className="px-4 py-3 text-center">Course Title</th>
