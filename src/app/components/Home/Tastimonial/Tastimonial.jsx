@@ -1,11 +1,13 @@
 import Image from "next/image";
 import React from "react";
 
-// This is a server component, so we can use async/await directly
 const Testimonial = async () => {
-  const res = await fetch("http://localhost:3000/data/tastimonial.json", {
-    cache: "no-store", // prevent caching during dev
-  });
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/data/tastimonial.json`,
+    {
+      cache: "no-store",
+    }
+  );
   const testimonials = await res.json();
 
   return (
